@@ -1,0 +1,13 @@
+# Entorno virtual
+venv/
+.env
+
+# Archivos temporales de Python
+*.pyc
+__pycache__/
+
+# Archivos y configuraciones de VSCode
+.vscode/
+
+# Carpeta de subidas o contenido pesado
+uploads/

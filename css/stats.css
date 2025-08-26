@@ -1,0 +1,30 @@
+/* Estilo de los gráficos */
+.grafico { 
+  max-width: 600px; 
+  margin: 30px auto; 
+  padding: 20px; 
+  background: white; 
+  border-radius: 8px; 
+  box-shadow: 0 2px 8px rgba(113, 1, 128, 0.692); 
+  text-align: center; 
+}
+
+.grafico img { 
+  max-width: 100%; 
+  height: auto; 
+  border-radius: 6px;
+}
+
+/* Botón de enlace al final */
+.stats-link {
+  color: white;         
+  background-color: #ad037a; 
+  padding: 8px 12px;    
+  text-decoration: none;
+  border-radius: 4px;    
+  display: inline-block; /* que respete el padding */
+}
+
+.stats-link:hover {
+  background-color: #700999;
+}

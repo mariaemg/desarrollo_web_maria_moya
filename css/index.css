@@ -1,0 +1,138 @@
+/* Estilos generales */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', Helvetica, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+/* Encabezado */
+.header {
+  background: linear-gradient(135deg, #7a0ca3, #e91e63, #ff9800);
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+  position: relative;
+}
+
+.header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 16px;
+  background: linear-gradient(90deg, #680a8a, #e91e63, #ce7c01);
+  border-radius: 50% 50% 0 0;
+}
+
+.header h1 {
+  font-size: 42px;
+  margin: 0;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+
+.header p {
+  font-size: 20px;
+  margin-top: 10px;
+  font-style: italic;
+  background: rgba(255, 255, 255, 0.15);
+  display: inline-block;
+  padding: 8px 15px;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* Menú de opciones */
+.menu {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0;
+  background: linear-gradient(90deg, #7a0ca3, #e91e63, #ff9800);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  margin: 20px auto;
+  max-width: 900px;
+}
+
+.menu a {
+  color: white;
+  text-decoration: none;
+  padding: 12px 22px;
+  margin: 0 8px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: box-shadow 0.3s ease, transform 0.2s ease, background 0.3s ease;
+  background: rgba(255,255,255,0.05);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.menu a:hover {
+  box-shadow: 0 0 15px rgba(255,255,255,0.6);
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.15);
+}
+
+/* Contenido principal */
+.main {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 25px;
+  background-color: #f4e6f5;
+  border-radius: 12px;
+  box-shadow: 0px 6px 20px rgba(0,0,0,0.15);
+}
+
+.main h1, .main h2 {
+  color: #4e025e;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.main p {
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Tabla de últimas adopciones */
+.tabla-adopciones {
+  width: 90%;
+  margin: 30px auto;
+  border-collapse: separate; /* para aplicar borde redondeado */
+  border-spacing: 0; /* para que sigan viendose celdas juntas */
+  border-radius: 12px; /* para borde redondeado */
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+  font-size: 16px;
+}
+
+.tabla-adopciones th, 
+.tabla-adopciones td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabla-adopciones th {
+  background: linear-gradient(90deg, #7a0ca3, #e91e63);
+  color: white;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.tabla-adopciones tr:nth-child(even) {
+  background-color: #f5f0f8;
+}
+
+.tabla-adopciones tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.tabla-adopciones tbody tr:hover {
+  background-color: #e8d3f7;
+  transform: scale(1.02);
+  transition: all 0.2s ease;
+}

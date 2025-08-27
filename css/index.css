@@ -19,6 +19,9 @@ body, html {
   padding: 40px 20px;
   text-align: center;
   position: relative;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .header::after {
@@ -52,21 +55,22 @@ body, html {
 /* =================== Menú =================== */
 .menu {
   display: flex;
+  flex-wrap: wrap;  /* permite que los items bajen si no caben */
   justify-content: center;
   padding: 12px 0;
   background: linear-gradient(90deg, #7a0ca3, #e91e63, #ff9800);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   margin: 20px auto;
-  max-width: 900px;
   width: 95%;
+  max-width: 900px;
 }
 
 .menu a {
   color: white;
   text-decoration: none;
   padding: 12px 22px;
-  margin: 0 8px;
+  margin: 5px 8px;
   border-radius: 8px;
   font-weight: 600;
   font-size: 16px;
@@ -84,14 +88,14 @@ body, html {
 
 /* =================== Contenido principal =================== */
 .main {
+  width: 95%;
   max-width: 900px;
   margin: 30px auto;
-  padding: 25px;
+  padding: 20px;
   background-color: #f4e6f5;
   border-radius: 12px;
   box-shadow: 0px 6px 20px rgba(0,0,0,0.15);
-  width: 95%;
-  overflow-x: auto; /* permite scroll si algo se sale del main */
+  overflow-x: auto; /* scroll horizontal si algo se sale */
 }
 
 .main h1, .main h2 {
@@ -153,16 +157,13 @@ body, html {
 
 /* =================== Media Queries (Móviles) =================== */
 @media (max-width: 480px) {
-
   /* Header más pequeño */
   .header {
     padding: 20px 10px;
   }
-
   .header h1 {
     font-size: 28px;
   }
-
   .header p {
     font-size: 14px;
     padding: 5px 10px;
@@ -174,7 +175,6 @@ body, html {
     align-items: center;
     padding: 10px 0;
   }
-
   .menu a {
     width: 90%;
     margin: 5px 0;
@@ -185,8 +185,12 @@ body, html {
     padding: 15px;
   }
 
-  /* Tabla responsiva */
+  /* Tabla más pequeña */
   .tabla-adopciones {
     font-size: 14px;
+  }
+
+  .tabla-wrapper {
+    overflow-x: auto;
   }
 }

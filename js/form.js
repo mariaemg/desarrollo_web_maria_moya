@@ -54,6 +54,11 @@ regionSelect.addEventListener("change", function() {
     }
 });
 
+// Prellenar la fecha con el formato solicitado
+const ahora = new Date();
+ahora.setHours(ahora.getHours() + 3);
+fechaEntrega.value = ahora.toISOString().slice(0,16);
+
 // Contacto
 contactoPor.addEventListener("change", () => {
     contactoID.style.display = contactoPor.value ? "block" : "none";
@@ -172,9 +177,6 @@ form.addEventListener("submit", function(e) {
 
     // Fecha entrega
     limpiarError(fechaEntrega);
-    const ahora = new Date();
-    ahora.setHours(ahora.getHours() + 3);
-    fechaEntrega.value = ahora.toISOString().slice(0,16); // prellenamos la fecha
     if(!fechaEntrega.value){
         mostrarError(fechaEntrega,"La fecha es obligatoria.");
         valido = false;

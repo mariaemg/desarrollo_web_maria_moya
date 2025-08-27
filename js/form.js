@@ -9,18 +9,28 @@ const contactoID = document.getElementById("contactoID");
 
 // Funciones para mostrar/limpiar errores
 function mostrarError(campo, mensaje) {
-    limpiarError(campo);
-    const span = document.createElement("span");
-    span.className = "error-msg";
-    span.textContent = mensaje;
-    campo.classList.add("error");
-    campo.insertAdjacentElement("afterend", span);
+    // Revisar si ya existe un span de error justo después del campo
+    let error = campo.parentNode.querySelector(".error-msg");
+    if (!error || error.previousElementSibling !== campo) {
+        campo.classList.add("error");
+        const span = document.createElement("span");
+        span.className = "error-msg";
+        span.textContent = mensaje;
+        campo.insertAdjacentElement("afterend", span);
+    } else {
+        // Si ya existe, solo actualizamos el mensaje
+        error.textContent = mensaje;
+    }
 }
 
 function limpiarError(campo) {
     campo.classList.remove("error");
-    const error = campo.parentNode.querySelector(".error-msg");
-    if (error) error.remove();
+    // Busca todos los spans que estén inmediatamente después de este campo
+    let next = campo.nextElementSibling;
+    while(next && next.classList.contains("error-msg")) {
+        next.remove();
+        next = campo.nextElementSibling;
+    }
 }
 
 // Manejo de la selección de región y comuna
@@ -64,11 +74,6 @@ btnAgregarFoto.addEventListener("click", function() {
     }
 });
 
-// Fecha prellenada
-const ahora = new Date();
-ahora.setHours(ahora.getHours() + 3);
-fechaEntrega.value = ahora.toISOString().slice(0,16); // formato solicitado
-
 // Función para validar tipo imagen
 function esImagen(file) {
     return (file && file.type && file.type.startsWith("image/"));
@@ -85,7 +90,6 @@ form.addEventListener("submit", function(e) {
         { campo: document.getElementById("email"), max: 100, requerido: true },
         { campo: document.getElementById("sector"), max: 100, requerido: false },
         { campo: document.getElementById("celular"), requerido: false },
-        { campo: contactoID, min:4, max:50, requerido: contactoPor.value ? true : false },
         { campo: document.getElementById("descripcion"), max: 500, requerido: false }
     ];
 
@@ -93,7 +97,6 @@ form.addEventListener("submit", function(e) {
         const campo = obj.campo;
         const val = campo.value.trim();
         limpiarError(campo);
-
         if(obj.requerido && !val){
             mostrarError(campo, "Este campo no puede estar vacío.");
             valido = false;
@@ -106,25 +109,40 @@ form.addEventListener("submit", function(e) {
                 mostrarError(campo, `Máximo ${obj.max} caracteres.`);
                 valido = false;
             }
-        }
-
-        // Email regex
-        if(campo.type === "email" && val){
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if(!re.test(val)){
-                mostrarError(campo, "Email inválido.");
-                valido = false;
+            // Email regex
+            if(campo.type === "email" && val){
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if(!re.test(val)){
+                    mostrarError(campo, "Email inválido.");
+                    valido = false;
+                }
             }
-        }
-        // Celular regex
-        if(campo.id==="celular" && val){
-            const re = /^\+\d{1,3}\.\d{8,12}$/;
-            if(!re.test(val)){
-                mostrarError(campo, "Formato: +NNN.NNNNNNNN");
-                valido = false;
+            // Celular regex
+            if(campo.id==="celular" && val){
+                const re = /^\+\d{1,3}\.\d{8,12}$/;
+                if(!re.test(val)){
+                    mostrarError(campo, "Formato: +NNN.NNNNNNNN");
+                    valido = false;
+                }
             }
         }
     });
+    
+    // Validación Contacto
+    limpiarError(contactoID);
+    if(contactoPor.value !== "") { // Solo validar si se selecciona un contacto real
+        const val = contactoID.value.trim();
+        if(!val){
+            mostrarError(contactoID, "Este campo no puede estar vacío.");
+            valido = false;
+        } else if(val.length < 4){
+            mostrarError(contactoID, "Mínimo 4 caracteres.");
+            valido = false;
+        } else if(val.length > 50){
+            mostrarError(contactoID, "Máximo 50 caracteres.");
+            valido = false;
+        }
+    }
 
     // Selects requeridos
     const selects = [
@@ -154,6 +172,9 @@ form.addEventListener("submit", function(e) {
 
     // Fecha entrega
     limpiarError(fechaEntrega);
+    const ahora = new Date();
+    ahora.setHours(ahora.getHours() + 3);
+    fechaEntrega.value = ahora.toISOString().slice(0,16); // prellenamos la fecha
     if(!fechaEntrega.value){
         mostrarError(fechaEntrega,"La fecha es obligatoria.");
         valido = false;

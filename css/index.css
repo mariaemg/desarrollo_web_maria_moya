@@ -1,6 +1,7 @@
-/* =================== Estilos Generales =================== */
+/* Estilos Generales */
 * {
-  box-sizing: border-box;
+  box-sizing: border-box; /* para manejar mejor los bordes y padding, me quedaban
+                          muchos espacios en blanco */
 }
 
 body, html {
@@ -12,7 +13,7 @@ body, html {
   width: 100%;
 }
 
-/* =================== Header =================== */
+/* Header */
 .header {
   background: linear-gradient(135deg, #7a0ca3, #e91e63, #ff9800);
   color: white;
@@ -52,7 +53,7 @@ body, html {
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
-/* =================== Menú =================== */
+/* Menú */
 .menu {
   display: flex;
   flex-wrap: wrap;  /* permite que los items bajen si no caben */
@@ -86,7 +87,7 @@ body, html {
   background: rgba(255,255,255,0.15);
 }
 
-/* =================== Contenido principal =================== */
+/* Contenido principal */
 .main {
   width: 95%;
   max-width: 900px;
@@ -95,7 +96,8 @@ body, html {
   background-color: #f4e6f5;
   border-radius: 12px;
   box-shadow: 0px 6px 20px rgba(0,0,0,0.15);
-  overflow-x: auto; /* scroll horizontal si algo se sale */
+  overflow-x: auto; /* scroll horizontal si algo se sale, lo ocupo porque mi 
+                    tabla se cortaba en dispositivos móviles */
 }
 
 .main h1, .main h2 {
@@ -110,9 +112,9 @@ body, html {
   margin-bottom: 30px;
 }
 
-/* =================== Tabla de adopciones =================== */
+/* Tabla de adopciones */
 .tabla-wrapper {
-  overflow-x: auto; /* scroll horizontal si no cabe */
+  overflow-x: auto; /* scroll horizontal si no cabe, para pantallas pequeñas */
   width: 100%;
 }
 
@@ -155,7 +157,7 @@ body, html {
   transition: all 0.2s ease;
 }
 
-/* =================== Media Queries (Móviles) =================== */
+/* Media Queries (Móviles), modificaciones para pantallas pequeñas */
 @media (max-width: 480px) {
   /* Header más pequeño */
   .header {

@@ -14,7 +14,7 @@ function mostrarError(campo, mensaje) {
     span.className = "error-msg";
     span.textContent = mensaje;
     campo.classList.add("error");
-    campo.parentNode.appendChild(span);
+    campo.insertAdjacentElement("afterend", span);
 }
 
 function limpiarError(campo) {
@@ -93,18 +93,21 @@ form.addEventListener("submit", function(e) {
         const campo = obj.campo;
         const val = campo.value.trim();
         limpiarError(campo);
+
         if(obj.requerido && !val){
             mostrarError(campo, "Este campo no puede estar vacío.");
             valido = false;
+        } else {
+            if(val.length < (obj.min||0)){
+                mostrarError(campo, `Mínimo ${obj.min} caracteres.`);
+                valido = false;
+            }
+            if(val.length > (obj.max||Infinity)){
+                mostrarError(campo, `Máximo ${obj.max} caracteres.`);
+                valido = false;
+            }
         }
-        if(val.length < (obj.min||0)){
-            mostrarError(campo, `Mínimo ${obj.min} caracteres.`);
-            valido = false;
-        }
-        if(val.length > (obj.max||Infinity)){
-            mostrarError(campo, `Máximo ${obj.max} caracteres.`);
-            valido = false;
-        }
+
         // Email regex
         if(campo.type === "email" && val){
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

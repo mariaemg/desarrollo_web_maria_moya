@@ -1,13 +1,18 @@
-/* Estilos generales */
-body {
+/* =================== Estilos Generales =================== */
+* {
+  box-sizing: border-box;
+}
+
+body, html {
   margin: 0;
   padding: 0;
   font-family: 'Arial', Helvetica, sans-serif;
   background-color: #f9f9f9;
   color: #333;
+  width: 100%;
 }
 
-/* Encabezado */
+/* =================== Header =================== */
 .header {
   background: linear-gradient(135deg, #7a0ca3, #e91e63, #ff9800);
   color: white;
@@ -44,7 +49,7 @@ body {
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
-/* Menú de opciones */
+/* =================== Menú =================== */
 .menu {
   display: flex;
   justify-content: center;
@@ -54,6 +59,7 @@ body {
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   margin: 20px auto;
   max-width: 900px;
+  width: 95%;
 }
 
 .menu a {
@@ -64,9 +70,10 @@ body {
   border-radius: 8px;
   font-weight: 600;
   font-size: 16px;
-  transition: box-shadow 0.3s ease, transform 0.2s ease, background 0.3s ease;
+  text-align: center;
   background: rgba(255,255,255,0.05);
   text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  transition: box-shadow 0.3s ease, transform 0.2s ease, background 0.3s ease;
 }
 
 .menu a:hover {
@@ -75,7 +82,7 @@ body {
   background: rgba(255,255,255,0.15);
 }
 
-/* Contenido principal */
+/* =================== Contenido principal =================== */
 .main {
   max-width: 900px;
   margin: 30px auto;
@@ -83,6 +90,8 @@ body {
   background-color: #f4e6f5;
   border-radius: 12px;
   box-shadow: 0px 6px 20px rgba(0,0,0,0.15);
+  width: 95%;
+  overflow-x: auto; /* permite scroll si algo se sale del main */
 }
 
 .main h1, .main h2 {
@@ -97,17 +106,22 @@ body {
   margin-bottom: 30px;
 }
 
-/* Tabla de últimas adopciones */
+/* =================== Tabla de adopciones =================== */
+.tabla-wrapper {
+  overflow-x: auto; /* scroll horizontal si no cabe */
+  width: 100%;
+}
+
 .tabla-adopciones {
-  width: 90%;
-  margin: 30px auto;
-  border-collapse: separate; /* para aplicar borde redondeado */
-  border-spacing: 0; /* para que sigan viendose celdas juntas */
-  border-radius: 12px; /* para borde redondeado */
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   text-align: center;
   font-size: 16px;
+  display: table;
 }
 
 .tabla-adopciones th, 
@@ -135,4 +149,44 @@ body {
   background-color: #e8d3f7;
   transform: scale(1.02);
   transition: all 0.2s ease;
+}
+
+/* =================== Media Queries (Móviles) =================== */
+@media (max-width: 480px) {
+
+  /* Header más pequeño */
+  .header {
+    padding: 20px 10px;
+  }
+
+  .header h1 {
+    font-size: 28px;
+  }
+
+  .header p {
+    font-size: 14px;
+    padding: 5px 10px;
+  }
+
+  /* Menú vertical en móvil */
+  .menu {
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+  }
+
+  .menu a {
+    width: 90%;
+    margin: 5px 0;
+  }
+
+  /* Main más compacto */
+  .main {
+    padding: 15px;
+  }
+
+  /* Tabla responsiva */
+  .tabla-adopciones {
+    font-size: 14px;
+  }
 }

@@ -145,6 +145,7 @@ input.error, select.error, textarea.error {
 
 /* Mensaje final */
 .mensaje-final {
+  text-decoration: none;
   background: #d1f7d1;
   border: 2px solid #28a745;
 }
@@ -160,4 +161,50 @@ input.error, select.error, textarea.error {
 }
 .mensaje-final button:hover {
   background: #76088f;
+}
+
+/* Título de la sección "Contactar por" */
+.contact-title {
+  text-align: left;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: #4e025e;
+  font-weight: bold;
+}
+
+/* Contenedor de cada fila de contacto */
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* Checkbox más compacto */
+.contact-row input[type="checkbox"] {
+  width: auto;
+  margin-right: 5px;
+}
+
+/* Input asociado al contacto */
+.contact-row .contactoID {
+  flex: 1; /* ocupa todo el espacio restante */
+  padding: 6px;
+  font-size: 0.95rem;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Para pantallas pequeñas, inputs se ponen debajo del checkbox */
+@media (max-width: 600px) {
+  .contact-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .contact-row .contactoID {
+    width: 100%;
+    margin-top: 5px;
+  }
 }

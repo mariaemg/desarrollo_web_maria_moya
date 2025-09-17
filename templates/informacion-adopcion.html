@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Información Aviso de Adopción</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/info.css') }}">
+</head>
+<body>
+  <div class="header">
+    <h1>Información del Aviso</h1>
+  </div>
+
+  <div class="detalle">
+    <h2>{{ aviso.cantidad }} {{ aviso.tipo }} / {{ aviso.edad }} {{ aviso.unidadEdad }} - {{ aviso.nombre }}</h2>
+
+    <div class="main">
+      <p><strong>Fecha Publicación:</strong> {{ aviso.fecha_publicacion }}</p>
+      <p><strong>Fecha Entrega:</strong> {{ aviso.fecha_entrega }}</p>
+      <p><strong>Comuna:</strong> {{ aviso.comuna }}</p>
+      <p><strong>Sector:</strong> {{ aviso.sector }}</p>
+      <p><strong>Cantidad / Tipo / Edad:</strong> {{ aviso.cantidad }} {{ aviso.tipo }} / {{ aviso.edad }} {{ aviso.unidadEdad }}</p>
+      <p><strong>Contacto:</strong>
+        {% if aviso.contactos %}
+          {% for c in aviso.contactos %}
+            {{ c }}{% if not loop.last %}<br>{% endif %}
+          {% endfor %}
+        {% else %}
+          Sin contacto
+        {% endif %}
+      </p>
+    </div>
+
+    <h3 style="text-align:center; margin-top:18px;">Fotos (click para ampliar)</h3>
+    <div class="fotos-grid" id="fotosGrid">
+      {% for foto in aviso.fotos %}
+        <img src="{{ url_for('static', filename='uploads/' ~ foto) }}" alt="Foto {{ loop.index }}">
+      {% endfor %}
+    </div>
+
+    <div class="acciones">
+      <button id="btnListado">Volver al listado</button>
+      <button id="btnPortada">Volver a portada</button>
+    </div>
+  </div>
+
+  <!-- Modal con la foto en grande-->
+  <div class="photo-modal" id="photoModal">
+    <div class="photo-modal-content">
+      <img id="fotoGrande" src="{{ url_for('static', filename='images/placeholder.png') }}" alt="Foto ampliada">
+      <button id="cerrarFoto">Cerrar</button>
+    </div>
+  </div>
+
+  <script>
+    // Hacer clic en una foto = mostrar modal
+    const fotos = document.querySelectorAll("#fotosGrid img");
+    fotos.forEach(img => {
+      img.addEventListener("click", () => {
+        document.getElementById("fotoGrande").src = img.src;
+        document.getElementById("photoModal").style.display = "flex";
+      });
+    });
+
+    // Cerrar modal
+    document.getElementById("cerrarFoto").addEventListener("click", () => {
+      document.getElementById("photoModal").style.display = "none";
+    });
+
+    // Botones de navegación
+    document.getElementById("btnListado").onclick = function() {
+        location.href = "{{ url_for('list') }}";
+    };
+    document.getElementById("btnPortada").onclick = function() {
+        location.href = "{{ url_for('index') }}";
+    };
+  </script>
+</body>
+</html>

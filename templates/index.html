@@ -1,0 +1,75 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adopción de Mascotas</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
+<body>
+
+  <!-- Encabezado -->
+  <header class="header">
+    <h1>🐾 ¡Bienvenido! Adopta una Mascota 🐾</h1>
+    <p>Encuentra a tu nuevo mejor amigo</p>
+  </header>
+
+  <!-- Menú de navegación -->
+  <div class="menu">
+    <a href="{{ url_for('form') }}">Agregar Aviso</a>
+    <a href="{{ url_for('list') }}">Ver Adopciones</a>
+    <a href="{{ url_for('stats') }}">Estadísticas</a>
+  </div>
+
+  <!-- Contenido principal que contiene la tabla -->
+  <main class="main">
+    <h2>Últimos 5 Avisos</h2>
+    <table class="tabla-adopciones">
+      <thead>
+        <tr>
+          <th>Fecha publicación</th>
+          <th>Comuna</th>
+          <th>Sector</th>
+          <th>Cantidad / Tipo / Edad</th>
+          <th>Fotos</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if avisos %}
+          {% for aviso in avisos %}
+          <tr>
+            <td>{{ aviso["fecha_publicacion"] }}</td>
+            <td>{{ aviso["comuna"] }}</td>
+            <td>{{ aviso["sector"] }}</td>
+            <td>{{ aviso["cantidad"] }} {{ aviso["tipo"] }} / {{ aviso["edad"] }} {{ aviso["unidadEdad"] }}</td>
+            <td>
+              <div class="fotos-celda">
+                {% if aviso["fotos"] %}
+                {% for foto in aviso["fotos"] %}
+                  <img src="{{ url_for('static', filename='uploads/' ~ foto) }}" 
+                       alt="Foto de {{ aviso['tipo'] }}" width="50">
+                {% endfor %}
+                {% else %}
+                <img src="{{ url_for('static', filename='images/placeholder.png') }}" 
+                     alt="Sin foto" width="50">
+              {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="5">
+              <div class="sin-avisos">
+                <img src="{{ url_for('static', filename='images/placeholder.png') }}" alt="Sin avisos">
+                <span>Aún no se han añadido avisos de adopción 😢<br>¡Sé el primero en agregar uno!</span>
+              </div>
+            </td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </main>
+
+</body>
+</html>

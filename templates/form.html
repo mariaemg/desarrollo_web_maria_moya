@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agregar Aviso de Adopción</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}">
+</head>
+<body>
+
+  <h1>🐾 Agregar Aviso de Adopción 🐾</h1>
+
+  {% if guardado %}
+    <!-- Mensaje final solo -->
+    <div id="mensajeFinal" class="mensaje-final">
+      <p>Hemos recibido la información de adopción {{ nombre_aviso }}, ¡muchas gracias y suerte! 🐶🐱</p>
+      <button onclick="window.location.href='{{ url_for('index') }}'">Volver a la portada</button>
+    </div>
+  {% else %}
+    <!-- Formulario -->
+    <form id="formAdopcion" action="{{ url_for('agregar_aviso') }}" method="POST" enctype="multipart/form-data" novalidate>
+
+      <!-- Sección 1: Lugar -->
+      <div class="seccion">
+        <h2>¿Dónde?</h2>
+        <label for="region">Región *</label>
+        <select id="region" name="region" required>
+            <option value="">Seleccione región</option>
+        </select>
+        {% for cat, msg in get_flashed_messages(with_categories=true) if cat == 'region' %}
+          <span class="error-msg">{{ msg }}</span>
+        {% endfor %}
+
+        <label for="comuna">Comuna *</label>
+        <select id="comuna" name="comuna" required>
+            <option value="">Seleccione comuna</option>
+        </select>
+        {% for cat, msg in get_flashed_messages(with_categories=true) if cat == 'comuna' %}
+          <span class="error-msg">{{ msg }}</span>
+        {% endfor %}
+
+        <label for="sector">Sector</label>
+        <input type="text" id="sector" name="sector" maxlength="100" placeholder="Opcional" value="{{ datos.sector or '' }}">
+        {% for cat, msg in get_flashed_messages(with_categories=true) if cat == 'sector' %}
+          <span class="error-msg">{{ msg }}</span>
+        {% endfor %}
+      </div>
+
+      <!-- Sección 2: Contacto -->
+      <div class="seccion">
+        <h2>¿Contacto de esta publicación?</h2>
+        <label for="nombre">Nombre *</label>
+        <input type="text" id="nombre" name="nombre" required minlength="3" maxlength="200" value="{{ datos.nombre or '' }}">
+        {% for cat, msg in get_flashed_messages(with_categories=true) if cat == 'nombre' %}
+          <span class="error-msg">{{ msg }}</span>
+        {% endfor %}
+
+        <label for="email">Email *</label>
+        <input type="email" id="email" name="email" required maxlength="100" value="{{ datos.email or '' }}">
+        {% for cat, msg in get_flashed_messages(with_categories=true) if cat == 'email' %}
+          <span class="error-msg">{{ msg }}</span>
+        {% endfor %}
+
+        <label for="celular">Número de celular</label>
+        <input type="tel" id="celular" name="celular" placeholder="+569.12345678"
+               pattern="^\+\d{1,3}\.\d{8,12}$" value="{{ datos.celular or '' }}">
+        {% for cat, msg in get_flashed_messages(with_categories=true) if cat == 'celular' %}
+          <span class="error-msg">{{ msg }}</span>
+        {% endfor %}
+
+        <h3 class="contact-title">Contactar por</h3>
+        <div id="contactarPor" class="contactar-por">
+          {% set contactos = ['WhatsApp', 'Telegram', 'X', 'Instagram', 'TikTok', 'Otra'] %}
+          {% for contacto in contactos %}
+            <div class="contact-row">
+              <label>
+                <input type="checkbox" name="contactarPor" value="{{ contacto }}"
+                  {% if datos.contactarPor and contacto in datos.contactarPor %}checked{% endif %}>
+                {{ contacto }}
+              </label>
+              <input type="text" name="contactoID[{{ contacto }}]" placeholder="ID o URL de {{ contacto }}" 
+                class="contactoID" style="display:none;" 
+                value="{{ datos.contactoID[contacto] if datos.contactoID and contacto in datos.contactoID else '' }}">
+              <!-- Errores individuales junto al input -->
+              {% for cat, msg in get_flashed_messages(with_categories=true) if cat == 'contactoID' and contacto in msg %}
+                <span class="error-msg">{{ msg }}</span>
+              {% endfor %}
+            </div>
+        {% endfor %}
+        <!-- Error global (más de 5 seleccionados) debajo del div -->
+        {% for cat, msg in get_flashed_messages(with_categories=true) if cat == 'contactarPor' %}
+          <span class="error-msg">{{ msg }}</span>
+        {% endfor %}
+        </div>
+      </div>
+      
+      <!-- Sección 3: Mascota -->
+      <div class="seccion">
+        <h2>¿Qué mascota ofrece en adopción?</h2>
+        <label for="tipo">Tipo *</label>
+        <select id="tipo" name="tipo" required>
+          <option value="">Seleccione</option>
+          <option {% if datos.tipo == 'Gato' %}selected{% endif %}>Gato</option>
+          <option {% if datos.tipo == 'Perro' %}selected{% endif %}>Perro</option>
+        </select>
+        {% for cat, msg in get_flashed_messages(with_categories=true) if cat == 'tipo' %}
+          <span class="error-msg">{{ msg }}</span>
+        {% endfor %}
+
+        <label for="cantidad">Cantidad *</label>
+        <input type="number" id="cantidad" name="cantidad" required min="1" value="{{ datos.cantidad or '' }}">
+        {% for cat, msg in get_flashed_messages(with_categories=true) if cat == 'cantidad' %}
+          <span class="error-msg">{{ msg }}</span>
+        {% endfor %}
+
+        <label for="edad">Edad *</label>
+        <input type="number" id="edad" name="edad" required min="1" value="{{ datos.edad or '' }}">
+        {% for cat, msg in get_flashed_messages(with_categories=true) if cat == 'edad' %}
+          <span class="error-msg">{{ msg }}</span>
+        {% endfor %}
+
+        <label for="unidadEdad">Unidad *</label>
+        <select id="unidadEdad" name="unidadEdad" required>
+          <option value="">Seleccione</option>
+          <option {% if datos.unidadEdad == 'Meses' %}selected{% endif %}>Meses</option>
+          <option {% if datos.unidadEdad == 'Años' %}selected{% endif %}>Años</option>
+        </select>
+        {% for cat, msg in get_flashed_messages(with_categories=true) if cat == 'unidadEdad' %}
+          <span class="error-msg">{{ msg }}</span>
+        {% endfor %}
+
+        <label for="fechaEntrega">Fecha disponible para entrega *</label>
+        <input type="datetime-local" id="fechaEntrega" name="fechaEntrega" required value="{{ datos.fechaEntrega or '' }}">
+        {% for cat, msg in get_flashed_messages(with_categories=true) if cat == 'fechaEntrega' %}
+          <span class="error-msg">{{ msg }}</span>
+        {% endfor %}
+
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" name="descripcion" cols="50" rows="10">{{ datos.descripcion or '' }}</textarea>
+        {% for cat, msg in get_flashed_messages(with_categories=true) if cat == 'descripcion' %}
+          <span class="error-msg">{{ msg }}</span>
+        {% endfor %}
+
+        <div class="fotos">
+          <label>Fotos *</label>
+          <input type="file" name="fotos" accept="image/*" required multiple>
+          <button type="button" id="btnAgregarFoto">Agregar otra foto</button>
+          {% for cat, msg in get_flashed_messages(with_categories=true) if cat == 'fotos' %}
+            <span class="error-msg">{{ msg }}</span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <button type="submit" class="boton-submit">Agregar este aviso de adopción</button>
+    </form>
+
+    <!-- Confirmación -->
+    <div id="confirmacion" class="mensaje-confirmacion" style="display:none;">
+      <p>¿Está seguro que desea agregar este aviso de adopción?</p>
+      <button id="siConfirmo">Sí, estoy seguro</button>
+      <button id="noConfirmo">No, no estoy seguro, quiero volver al formulario</button>
+    </div>
+  {% endif %}
+
+  <!-- Pasar datos de Flask a JS -->
+  <script>
+      var datos = {{ datos | tojson }};
+  </script>
+
+  <!-- JS -->
+  <script src="{{ url_for('static', filename='js/region_comuna.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/form.js') }}"></script>
+
+</body>
+</html>

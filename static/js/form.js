@@ -4,12 +4,12 @@ const comunaSelect = document.getElementById("comuna");
 const btnAgregarFoto = document.getElementById("btnAgregarFoto");
 const fechaEntrega = document.getElementById("fechaEntrega");
 const form = document.getElementById("formAdopcion");
-const contactoPor = document.getElementById("contactarPor");
-const contactoID = document.getElementById("contactoID");
+const contactosDiv = document.getElementById("contactarPor");
+const checkboxes = contactosDiv.querySelectorAll("input[type='checkbox']");
+let errorGlobalContactos = contactosDiv.querySelector(".error-msg");
 
 // Funciones para mostrar/limpiar errores
 function mostrarError(campo, mensaje) {
-    // Revisar si ya existe un span de error justo después del campo
     let error = campo.parentNode.querySelector(".error-msg");
     if (!error || error.previousElementSibling !== campo) {
         campo.classList.add("error");
@@ -18,14 +18,12 @@ function mostrarError(campo, mensaje) {
         span.textContent = mensaje;
         campo.insertAdjacentElement("afterend", span);
     } else {
-        // Si ya existe, solo actualizamos el mensaje
         error.textContent = mensaje;
     }
 }
 
 function limpiarError(campo) {
     campo.classList.remove("error");
-    // Busca todos los spans que estén inmediatamente después de este campo
     let next = campo.nextElementSibling;
     while(next && next.classList.contains("error-msg")) {
         next.remove();
@@ -33,38 +31,93 @@ function limpiarError(campo) {
     }
 }
 
-// Manejo de la selección de región y comuna
+// Manejo de región y comuna
+function llenarComunas(regionId) {
+    comunaSelect.innerHTML = "<option value=''>Seleccione comuna</option>";
+    const region = region_comuna.regiones.find(r => r.numero == regionId);
+    if (region) {
+        region.comunas.forEach(c => {
+            const opt = document.createElement("option");
+            opt.value = c.id;
+            opt.textContent = c.nombre;
+            if (datos.comuna && datos.comuna == c.id) {
+                opt.selected = true;
+            }
+            comunaSelect.appendChild(opt);
+        });
+    }
+}
+
 region_comuna.regiones.forEach(r => {
     const opt = document.createElement("option");
     opt.value = r.numero;
     opt.textContent = r.nombre;
+    if (datos.region && datos.region == r.numero) {
+        opt.selected = true;
+        llenarComunas(r.numero);
+    }
     regionSelect.appendChild(opt);
 });
 
 regionSelect.addEventListener("change", function() {
-    comunaSelect.innerHTML = "<option value=''>Seleccione comuna</option>";
-    const selectedRegion = region_comuna.regiones.find(r => r.numero == this.value);
-    if (selectedRegion) {
-        selectedRegion.comunas.forEach(c => {
-            const opt = document.createElement("option");
-            opt.value = c.id;
-            opt.textContent = c.nombre;
-            comunaSelect.appendChild(opt);
-        });
-    }
+    llenarComunas(this.value);
 });
 
-// Prellenar la fecha con el formato solicitado
+// Fecha
 const ahora = new Date();
-ahora.setHours(ahora.getHours() + 3);
-fechaEntrega.value = ahora.toISOString().slice(0,16);
+const inputEntrega = document.getElementById("fechaEntrega");
+if (inputEntrega) {
+    function formatDate(date) {
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const hh = String(date.getHours()).padStart(2, '0');
+        const min = String(date.getMinutes()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+    }
+    const fechaIngreso = document.createElement("input");
+    fechaIngreso.type = "hidden";
+    fechaIngreso.name = "fechaIngreso";
+    fechaIngreso.value = formatDate(ahora);
+    form.appendChild(fechaIngreso);
 
-// Contacto
-contactoPor.addEventListener("change", () => {
-    contactoID.style.display = contactoPor.value ? "block" : "none";
+    const entrega = new Date(ahora);
+    entrega.setHours(entrega.getHours() + 3);
+    inputEntrega.value = formatDate(entrega);
+}
+
+// Contacto múltiple
+checkboxes.forEach(chk => {
+    const inputID = chk.parentNode.nextElementSibling;
+    if (chk.checked) inputID.style.display = "block";
+    chk.addEventListener("change", () => {
+        inputID.style.display = chk.checked ? "block" : "none";
+        actualizarErrorContactos(); // Actualiza error global al cambiar
+    });
 });
 
-// Manejo de fotos
+// Limitar máximo 5 contactos
+function actualizarErrorContactos() {
+    const seleccionados = contactosDiv.querySelectorAll("input[type='checkbox']:checked");
+    if(seleccionados.length > 5) {
+        if (!errorGlobalContactos) {
+            errorGlobalContactos = document.createElement("span");
+            errorGlobalContactos.className = "error-msg";
+            contactosDiv.appendChild(errorGlobalContactos);
+        }
+        errorGlobalContactos.style.display = "block";
+        errorGlobalContactos.textContent = "Solo puedes seleccionar un máximo de 5 opciones.";
+        return false;
+    } else {
+        if (errorGlobalContactos) {
+            errorGlobalContactos.style.display = "none";
+            errorGlobalContactos.textContent = "";
+        }
+        return true;
+    }
+}
+
+// Fotos
 btnAgregarFoto.addEventListener("click", function() {
     const fotosDiv = document.querySelector(".fotos");
     const inputs = fotosDiv.querySelectorAll("input[type='file']");
@@ -79,14 +132,13 @@ btnAgregarFoto.addEventListener("click", function() {
     }
 });
 
-// Función para validar tipo imagen
 function esImagen(file) {
     return (file && file.type && file.type.startsWith("image/"));
 }
 
-// Validación del formulario 
+// Validación del formulario
 form.addEventListener("submit", function(e) {
-    e.preventDefault(); //para utilizar nuestra validación (no se manda automáticamente)
+    e.preventDefault();
     let valido = true;
 
     // Campos de texto
@@ -97,7 +149,6 @@ form.addEventListener("submit", function(e) {
         { campo: document.getElementById("celular"), requerido: false },
         { campo: document.getElementById("descripcion"), max: 500, requerido: false }
     ];
-
     camposTexto.forEach(obj => {
         const campo = obj.campo;
         const val = campo.value.trim();
@@ -114,7 +165,6 @@ form.addEventListener("submit", function(e) {
                 mostrarError(campo, `Máximo ${obj.max} caracteres.`);
                 valido = false;
             }
-            // Email regex
             if(campo.type === "email" && val){
                 const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if(!re.test(val)){
@@ -122,7 +172,6 @@ form.addEventListener("submit", function(e) {
                     valido = false;
                 }
             }
-            // Celular regex
             if(campo.id==="celular" && val){
                 const re = /^\+\d{1,3}\.\d{8,12}$/;
                 if(!re.test(val)){
@@ -132,22 +181,28 @@ form.addEventListener("submit", function(e) {
             }
         }
     });
-    
-    // Validación Contacto
-    limpiarError(contactoID);
-    if(contactoPor.value !== "") { // Solo validar si se selecciona un contacto real
-        const val = contactoID.value.trim();
-        if(!val){
-            mostrarError(contactoID, "Este campo no puede estar vacío.");
-            valido = false;
-        } else if(val.length < 4){
-            mostrarError(contactoID, "Mínimo 4 caracteres.");
-            valido = false;
-        } else if(val.length > 50){
-            mostrarError(contactoID, "Máximo 50 caracteres.");
-            valido = false;
-        }
+
+    // Validar contactos visibles y máximo 5
+    if(!actualizarErrorContactos()){
+        valido = false;
     }
+    checkboxes.forEach(chk => {
+        const inputID = chk.parentNode.nextElementSibling;
+        limpiarError(inputID);
+        if (chk.checked) {
+            const val = inputID.value.trim();
+            if (!val) {
+                mostrarError(inputID, "Este campo no puede estar vacío.");
+                valido = false;
+            } else if (val.length < 4) {
+                mostrarError(inputID, "Mínimo 4 caracteres.");
+                valido = false;
+            } else if (val.length > 50) {
+                mostrarError(inputID, "Máximo 50 caracteres.");
+                valido = false;
+            }
+        }
+    });
 
     // Selects requeridos
     const selects = [
@@ -203,34 +258,35 @@ form.addEventListener("submit", function(e) {
         mostrarError(fotosDiv,"Debe subir entre 1 y 5 fotos.");
         valido = false;
     } else {
-        // validar que cada archivo sea imagen
-        let errorImagen = false;
         fotos.forEach(input => {
             if (input.files && input.files.length > 0) {
                 const file = input.files[0];
                 if (!esImagen(file)) {
-                    errorImagen = true;
+                    mostrarError(fotosDiv, "Todos los archivos deben ser imágenes (jpg, png, gif, webp, bmp, heic).");
+                    valido = false;
                 }
             }
         });
-        if (errorImagen) {
-            mostrarError(fotosDiv, "Todos los archivos deben ser imágenes (jpg, png, gif, webp, bmp, heic).");
-            valido = false;
-        }
     }
 
-    if(!valido) return; // caso formulario inválido
+    // Si no es válido, no continuar
+    if(!valido) return;
 
-    // Mostrar confirmación
+    // Confirmación
     form.style.display = "none";
     document.getElementById("confirmacion").style.display = "block";
 });
 
-// Confirmar o cancelar
+// Confirmación final
 document.getElementById("siConfirmo").addEventListener("click", function(){
-    document.getElementById("confirmacion").style.display = "none";
-    document.getElementById("mensajeFinal").style.display = "block";
+    const mensajeEspera = document.createElement("div");
+    mensajeEspera.id = "mensajeEspera";
+    mensajeEspera.className = "mensaje-final";
+    mensajeEspera.textContent = "🕒 Espere, se está añadiendo el aviso...";
+    document.body.appendChild(mensajeEspera);
+    form.submit();
 });
+
 document.getElementById("noConfirmo").addEventListener("click", function(){
     document.getElementById("confirmacion").style.display = "none";
     form.style.display = "block";

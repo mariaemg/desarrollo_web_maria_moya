@@ -32,7 +32,7 @@ def formatear_unidad_edad(unidad, cantidad):
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'cualquier-cosa-super-secreta'
+    app.config['SECRET_KEY'] = 'KJHGSAFGDTEQQQ'
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     app.config['DEBUG'] = True
 

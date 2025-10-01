@@ -227,7 +227,11 @@ form.addEventListener("submit", function(e) {
         if(!num.value || num.value<1){
             mostrarError(num,"Debe ser al menos 1");
             valido = false;
+        } else if (!Number.isInteger(val)) {
+        mostrarError(num,"Debe ser un número entero");
+        valido = false;
         }
+
     });
 
     // Fecha entrega

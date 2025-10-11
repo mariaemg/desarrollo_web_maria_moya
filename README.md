@@ -33,6 +33,6 @@ Toda la lógica correspondiente a la **información de adopción** de un aviso p
 - Se implementaron validaciones en backend, más estrictas que las de frontend, para asegurar que el usuario no evite estas medidas.
 - En la subida de imágenes, se implementó un sistema de nombres seguros con **hash** para evitar colisiones y accesos indebidos.
 - Para el apartado de estadísticas se trabajó con la biblioteca **HighCharts** vista en clases.
-- Para el apartado de comentarios se añadió una funcionalidad de **paginación** para evitar que se muestren demasiados comentarios de una sola vez, haciéndolo más agradable para el usuario.
+- Para el apartado de comentarios se añadió una funcionalidad de **paginación** para evitar que se muestren demasiados comentarios de una sola vez, cargando de 5 en 5 comentarios para no saturar la vista, haciéndolo más agradable para el usuario.
 - Se utilizó **fetch** para manejar las respuestas asociadas a obtener datos para las estadísticas y comentarios, para así procesar de manera asíncrona las solicitudes. Esto mejora la experiencia del usuario, ya que los comentarios se muestran automáticamente al agregarlos y las estadísticas se actualizan sin interrumpir la interacción con la página. Además, permite procesar múltiples solicitudes de datos de manera eficiente y fluida.
 - El proyecto fue subido a **Git**, y se trabajó en la rama `Tarea3` para el desarrollo.  

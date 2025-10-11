@@ -1,7 +1,7 @@
-# Tarea 2 - Desarrollo Web
+# Tarea 3 - Desarrollo Web
 
 ## Descripción
-En esta segunda parte del proyecto, añadimos dinamismo a la página web por medio de Flask y de la implementación de una base de datos usando SQLAlchemy.
+En esta tercera parte del proyecto, añadimos dinamismo a la parte de las estadísticas y además añadimos una funcionalidad de comentarios para cada aviso de adopción.
 
 ## Estructura del proyecto
 - **app.py**: Archivo principal con la aplicación de Flask y definición de rutas. 
@@ -10,17 +10,19 @@ En esta segunda parte del proyecto, añadimos dinamismo a la página web por med
     - index.html: Plantilla con la portada de la página.
     - form.html: Plantilla con el formulario.
     - list.html: Plantilla con la lista de adopciones.
-    - informacion-adopcion.html: Plantilla con la información detallada de un aviso, se accede haciendo click en alguna fila en la lista de adopciones.
-    - estadisticas.html: Por el momento página estática con estadísticas ficticias.
+    - informacion-adopcion.html: Plantilla con la información detallada de un aviso, se accede haciendo click en alguna fila en la lista de adopciones. También, ahora muestra un apartado con todos los comentarios añadidos por los usuarios para el aviso mostrado, además del respectivo formulario para añadir más comentarios.
+    - estadisticas.html: Muestra 3 gráficos asociados a diferentes estadísticas de las adopciones, que se actualizan realizando solicitudes a la base de datos de manera asíncrona.
 - **static/**: Carpeta con elementos estáticos:
     - css: Carpeta con CSS correspondientes a cada plantilla html.
-    - images: Imágenes asociadas a estadísticas, y placeholder para la ausencia de imágenes en algunos html.
-    - js: Archivos JS del formulario.
+    - images: Placeholder para la ausencia de imágenes en algunos html.
+    - js: Archivos JS del formulario, y otro JS para todo lo asociado a informacion-adopcion.html.
     - uploads: Imágenes subidas por medio del formulario.
 
 El formulario es validado tanto en el **frontend**, por medio del JS, como en el **backend**, por medio de Flask.
 
 También, se dejó la lógica de **validación del formulario** en un js aparte debido a su extensión, buscando una mayor claridad. Se valida el formulario por medio de mis propias funciones, no utilizando las alertas predeterminadas que entrega el atributo required.
+
+Toda la lógica correspondiente a la **información de adopción** de un aviso particular también se dejó en un js aparte.
 
 ## Decisiones tomadas
 - Se utilizó **Flexbox** para organizar los elementos en varias secciones, como las fotos de las tablas para que no fallaran con el padding o sobrepasaran el borde de estas.  
@@ -30,4 +32,7 @@ También, se dejó la lógica de **validación del formulario** en un js aparte 
 - Para garantizar seguridad, todos los campos de texto se guardan en la base de datos en crudo, y se aplican escapes al mostrar (usando **markupsafe.escape**) para prevenir inyecciones.
 - Se implementaron validaciones en backend, más estrictas que las de frontend, para asegurar que el usuario no evite estas medidas.
 - En la subida de imágenes, se implementó un sistema de nombres seguros con **hash** para evitar colisiones y accesos indebidos.
-- El proyecto fue subido a **Git**, y se trabajó en la rama `Tarea2` para el desarrollo.  
+- Para el apartado de estadísticas se trabajó con la biblioteca **HighCharts** vista en clases.
+- Para el apartado de comentarios se añadió una funcionalidad de **paginación** para evitar que se muestren demasiados comentarios de una sola vez, haciéndolo más agradable para el usuario.
+- Se utilizó **fetch** para manejar las respuestas asociadas a obtener datos para las estadísticas y comentarios, para así procesar de manera asíncrona las solicitudes. Esto mejora la experiencia del usuario, ya que los comentarios se muestran automáticamente al agregarlos y las estadísticas se actualizan sin interrumpir la interacción con la página. Además, permite procesar múltiples solicitudes de datos de manera eficiente y fluida.
+- El proyecto fue subido a **Git**, y se trabajó en la rama `Tarea3` para el desarrollo.  

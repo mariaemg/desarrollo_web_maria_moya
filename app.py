@@ -1,9 +1,11 @@
 import os
 import hashlib
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, make_response
 from markupsafe import escape
 from werkzeug.utils import secure_filename
+from sqlalchemy import func, cast, Date, extract
+from flask import jsonify
 import filetype
 
 from database import *
@@ -296,10 +298,151 @@ def create_app():
 
         session.close()
         return render_template("informacion-adopcion.html", aviso=aviso_data)
+    
+    @app.route("/comentario/<int:aviso_id>", methods=["POST"])
+    def agregar_comentario(aviso_id):
+        session = getSession()
+        data = request.get_json()
 
-    @app.route("/stats") # Estadísticas, por el momento estáticas
+        nombre = data.get("nombre", "").strip()
+        texto = data.get("texto", "").strip()
+        fecha_str = data.get("fecha")
+        fecha = datetime.fromisoformat(fecha_str) if fecha_str else datetime.now()
+        errores = []
+
+        # Validaciones usando registrar_error
+        if not nombre:
+            registrar_error("El nombre es obligatorio.", "nombre", errores)
+        elif len(nombre) < 3:
+            registrar_error("El nombre debe tener al menos 3 caracteres.", "nombre", errores)
+        elif len(nombre) > 80:
+            registrar_error("El nombre no puede superar 80 caracteres.", "nombre", errores)
+
+        if not texto:
+            registrar_error("El comentario no puede estar vacío.", "texto", errores)
+        elif len(texto) < 5:
+            registrar_error("El comentario debe tener al menos 5 caracteres.", "texto", errores)
+
+        if errores:
+            session.close()
+            # Devolver errores en JSON para el fetch
+            return jsonify({"ok": False, "errores": [msg for msg, cat in errores]}), 400
+
+
+        comentario = Comentario(nombre=nombre, texto=texto, aviso_id=aviso_id, fecha=fecha)
+        session.add(comentario)
+        session.commit()
+
+        # Guardar los datos antes de cerrar la sesión
+        comentario_data = {
+            "id": comentario.id,
+            "nombre": comentario.nombre,
+            "texto": comentario.texto,
+            "fecha": comentario.fecha.strftime("%Y-%m-%d %H:%M")
+        }
+        session.close()
+
+        return jsonify({
+            "ok": True,
+            "comentario": comentario_data})
+    
+    @app.route("/comentarios/<int:aviso_id>", methods=["GET"])
+    def listar_comentarios(aviso_id):
+        session = getSession()
+        comentarios = (
+            session.query(Comentario)
+            .filter_by(aviso_id=aviso_id)
+            .order_by(Comentario.fecha.desc())
+            .all()
+        )
+        session.close()
+
+        result = [
+            {"nombre": c.nombre, "texto": c.texto, "fecha": c.fecha.strftime("%Y-%m-%d %H:%M")}
+            for c in comentarios
+        ]
+        return jsonify(result)
+
+
+    @app.route("/statsdata")  # Estadísticas dinámicas
+    def statsdata():
+        session = getSession()
+
+        # Cantidad de avisos por día
+        avisos_por_dia = (
+            session.query(
+                cast(AvisoAdopcion.fecha_ingreso, Date).label("dia"),
+                func.count(AvisoAdopcion.id).label("cantidad")
+            )   
+            .group_by("dia")
+            .order_by("dia")
+            .all()
+        )
+
+        # Cantidad de avisos por tipo (Gato vs Perro)
+        tipo_counts = (
+            session.query(
+                AvisoAdopcion.tipo.label("tipo"),
+                func.count(AvisoAdopcion.id).label("cantidad")
+            )
+            .group_by(AvisoAdopcion.tipo)
+            .all()
+        )
+
+        # Cantidad de avisos por mes y tipo
+        avisos_por_mes_tipo = (
+            session.query(
+                extract("year", AvisoAdopcion.fecha_ingreso).label("anio"),
+                extract("month", AvisoAdopcion.fecha_ingreso).label("mes"),
+                AvisoAdopcion.tipo.label("tipo"),
+                func.count(AvisoAdopcion.id).label("cantidad")
+            )
+            .group_by("anio", "mes", AvisoAdopcion.tipo)
+            .order_by("anio", "mes", AvisoAdopcion.tipo)
+            .all()
+        )
+
+        session.close()
+
+        # Formatear datos para JSON
+        dias = [r.dia.strftime("%Y-%m-%d") for r in avisos_por_dia]
+        cantidades_por_dia = [r.cantidad for r in avisos_por_dia]
+
+        tipos = [r.tipo.capitalize() for r in tipo_counts]
+        cantidades_por_tipo = [r.cantidad for r in tipo_counts]
+
+        # Gráfico de barras por mes y tipo
+        meses_ordenados = sorted({(r.anio, r.mes) for r in avisos_por_mes_tipo})
+        series_barras = []
+        for tipo in ["Perro", "Gato"]:
+            data = []
+            for anio, mes in meses_ordenados:
+                encontrado = next(
+                    (r.cantidad for r in avisos_por_mes_tipo 
+                    if r.tipo.capitalize() == tipo and r.anio == anio and r.mes == mes), 0
+                )
+                data.append(encontrado)
+            series_barras.append({"name": tipo, "data": data})
+    
+        categorias_meses = [f"{anio}-{mes:02d}" for anio, mes in meses_ordenados]
+
+        resp = {
+            "linea": {"dias": dias, "cantidades": cantidades_por_dia},
+            "torta": {"tipos": tipos, "cantidades": cantidades_por_tipo},
+            "barras": {"categorias": categorias_meses, "series": series_barras}
+        }
+
+        response = make_response(jsonify(resp))
+        response.headers["Content-Type"] = "application/json"
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        return response
+
+    @app.route("/stats")
     def stats():
+        # Solo renderiza la plantilla HTML, los datos se traen por fetch desde /stats
         return render_template("estadisticas.html")
+
+
 
     return app
 

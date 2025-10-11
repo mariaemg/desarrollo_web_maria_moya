@@ -70,6 +70,12 @@ class AvisoAdopcion(Base):
         cascade="all, delete-orphan"
     )
 
+    comentarios: Mapped[list["Comentario"]] = relationship(
+    back_populates="aviso",
+    cascade="all, delete-orphan"
+    )
+
+
 class Foto(Base):
     __tablename__ = "foto"
 
@@ -92,3 +98,14 @@ class ContactarPor(Base):
     aviso_id: Mapped[int] = mapped_column(ForeignKey("aviso_adopcion.id"), nullable=False)
 
     aviso: Mapped["AvisoAdopcion"] = relationship(back_populates="contactos")
+
+class Comentario(Base):
+    __tablename__ = "comentario"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nombre: Mapped[str] = mapped_column(String(80), nullable=False)
+    texto: Mapped[str] = mapped_column(Text, nullable=False)
+    fecha: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+    aviso_id: Mapped[int] = mapped_column(ForeignKey("aviso_adopcion.id"), nullable=False)
+
+    aviso: Mapped["AvisoAdopcion"] = relationship(back_populates="comentarios")

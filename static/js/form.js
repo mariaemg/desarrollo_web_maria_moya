@@ -224,13 +224,18 @@ form.addEventListener("submit", function(e) {
     const edad = document.getElementById("edad");
     [cantidad, edad].forEach(num => {
         limpiarError(num);
-        if(!num.value || num.value<1){
-            mostrarError(num,"Debe ser al menos 1");
-            valido = false;
-        } else if (!Number.isInteger(val)) {
-        mostrarError(num,"Debe ser un número entero");
+        const val = num.value.trim();
+
+    if (!val) {
+        mostrarError(num, "Debe ser al menos 1");
         valido = false;
-        }
+    } else if (!/^\d+$/.test(val)) {  // solo dígitos, no acepta puntos ni negativos
+        mostrarError(num, "Debe ser un número entero positivo");
+        valido = false;
+    } else if (parseInt(val) < 1) {
+        mostrarError(num, "Debe ser al menos 1");
+        valido = false;
+    }
 
     });
 

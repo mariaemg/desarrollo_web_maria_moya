@@ -39,6 +39,30 @@
       {% endfor %}
     </div>
 
+    <div class="comentarios">
+      <h2 class="comentarios-titulo">💬 Comentarios</h2>
+
+      <div id="comentariosList" class="comentarios-lista">
+      <!-- Aquí se listarán los comentarios vía JS -->
+      </div>
+
+      <!-- Contenedor para botones de paginación -->
+      <div id="paginacionComentarios" class="paginacion-comentarios">
+        <button id="prevPagina">Anterior</button>
+        <span id="infoPagina"></span>
+        <button id="nextPagina">Siguiente</button>
+      </div>
+
+      <h3 class="agregar-comentario-titulo">Agregar comentario</h3>
+      <form id="formComentario" action="{{ url_for('agregar_comentario', aviso_id=aviso.id) }}" method="POST" novalidate class="form-comentario">
+        <input type="text" id="nombre" placeholder="Nombre" required minlength="3" maxlength="80">
+        <textarea id="texto" placeholder="Comentario" rows="4" required minlength="5"></textarea>
+        <button type="submit">Agregar comentario</button>
+        <div id="comentariosErrores" class="comentarios-errores"></div>
+      </form>
+    </div>
+
+
     <div class="acciones">
       <button id="btnListado">Volver al listado</button>
       <button id="btnPortada">Volver a portada</button>
@@ -52,29 +76,10 @@
       <button id="cerrarFoto">Cerrar</button>
     </div>
   </div>
-
+  <!-- Referencia al JS externo -->
   <script>
-    // Hacer clic en una foto = mostrar modal
-    const fotos = document.querySelectorAll("#fotosGrid img");
-    fotos.forEach(img => {
-      img.addEventListener("click", () => {
-        document.getElementById("fotoGrande").src = img.src;
-        document.getElementById("photoModal").style.display = "flex";
-      });
-    });
-
-    // Cerrar modal
-    document.getElementById("cerrarFoto").addEventListener("click", () => {
-      document.getElementById("photoModal").style.display = "none";
-    });
-
-    // Botones de navegación
-    document.getElementById("btnListado").onclick = function() {
-        location.href = "{{ url_for('list') }}";
-    };
-    document.getElementById("btnPortada").onclick = function() {
-        location.href = "{{ url_for('index') }}";
-    };
+    const avisoId = {{ aviso.id }};  // pasar el id del aviso desde Flask
   </script>
+  <script src="{{ url_for('static', filename='js/info-adopcion.js') }}"></script>
 </body>
 </html>

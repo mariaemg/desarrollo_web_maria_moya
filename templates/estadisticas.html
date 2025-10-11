@@ -1,35 +1,84 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Estadísticas de Avisos de Adopción</title>
-<!-- Reutilizar CSS de index para algunos elementos -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/stats.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Estadísticas de Avisos de Adopción</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/stats.css') }}">
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/export-data.js"></script>
 </head>
+
 <body>
   <div class="header"><h1>Estadísticas de Avisos de Adopción</h1></div>
 
   <div class="main">
     <div class="grafico">
       <h2>Cantidad de avisos por día</h2>
-      <img src="../static/images/grafico-lineas.jpeg" alt="Gráfico de líneas: cantidad de avisos por día">
+      <div id="grafico-lineas" style="height:400px;"></div>
     </div>
 
     <div class="grafico">
       <h2>Total de avisos por tipo de mascota</h2>
-      <img src="../static/images/grafico-torta.jpeg" alt="Gráfico de torta: avisos por tipo de mascota">
+      <div id="grafico-torta" style="height:400px;"></div>
     </div>
 
     <div class="grafico">
       <h2>Comparación mensual de adopciones (Gatos vs Perros)</h2>
-      <img src="../static/images/grafico-barras.jpeg" alt="Gráfico de barras: comparación mensual de adopciones">
+      <div id="grafico-barras" style="height:400px;"></div>
     </div>
 
     <div style="text-align:center; margin-top:18px;">
-      <a class="stats-link" href="{{ url_for('index') }} ">Volver a portada</a>
+      <a class="stats-link" href="{{ url_for('index') }}">Volver a portada</a>
     </div>
   </div>
+
+  <!-- Código para dibujar los gráficos usando fetch -->
+  <script>
+    fetch('/statsdata')
+      .then(response => response.json())
+      .then(data => {
+
+        const misColores = ['#7a0ca3', '#e91e63', '#ff9800', '#ce7c01', '#540364'];
+
+        // Gráfico de líneas: avisos por día
+        Highcharts.chart('grafico-lineas', {
+          chart: { type: 'line' },
+          colors: misColores,
+          title: { text: null },
+          xAxis: { categories: data.linea.dias },
+          yAxis: { title: { text: 'Avisos publicados' } },
+          series: [{ name: 'Avisos', data: data.linea.cantidades }]
+        });
+
+        // Gráfico de torta: total de avisos por tipo de mascota
+        const tortaData = data.torta.tipos.map((tipo, i) => ({
+          name: tipo,
+          y: data.torta.cantidades[i]
+        }));
+
+        Highcharts.chart('grafico-torta', {
+          chart: { type: 'pie' },
+          colors: misColores,
+          title: { text: null },
+          series: [{ name: 'Avisos', data: tortaData }]
+        });
+
+        // Gráfico de barras agrupadas: adopciones por mes y tipo
+        Highcharts.chart('grafico-barras', {
+          chart: { type: 'column' },
+          colors: misColores,
+          title: { text: null },
+          xAxis: { categories: data.barras.categorias },
+          yAxis: { title: { text: 'Cantidad de adopciones' }, allowDecimals: false },
+          series: data.barras.series
+        });
+      })
+      .catch(error => {
+        console.error('Error al cargar estadísticas:', error);
+      });
+  </script>
 </body>
 </html>

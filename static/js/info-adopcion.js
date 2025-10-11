@@ -68,7 +68,7 @@ function cargarComentarios() {
     .catch(err => console.error("Error al cargar comentarios:", err));
 }
 
-// 🔹 Botones de paginación
+// Botones de paginación
 document.addEventListener("DOMContentLoaded", () => {
   const btnPrev = document.getElementById("prevPagina");
   const btnNext = document.getElementById("nextPagina");
@@ -162,6 +162,5 @@ document.getElementById("formComentario").addEventListener("submit", function(e)
     }
   });
 });
--
 // Cargar comentarios al inicio
 cargarComentarios();

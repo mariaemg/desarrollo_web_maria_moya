@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evaluar Avisos de Adopción</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/evaluaciones.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/list.css') }}">
+</head>
+<body>
+  <header class="header">
+    <h1>🐾 Evaluar Avisos de Adopción 🐾</h1>
+    <p>Califica los avisos y ayuda a mejorar la experiencia</p>
+  </header>
+
+  <main class="main">
+    <h2>Listado de Avisos</h2>
+    <div class="tabla-wrapper">
+      <table class = "tabla-adopciones" id="tablaAvisos">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Fecha publicación</th>
+            <th>Sector</th>
+            <th>Cantidad / Tipo / Edad</th>
+            <th>Comuna</th>
+            <th>Nota promedio</th>
+            <th>Evaluar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Se llena dinámicamente con JS -->
+        </tbody>
+      </table>
+    </div>
+  
+  <div id="paginacion" class="paginacion"></div>
+
+  <div class="volver-portada">
+      <a class="link" href="{{ url_for('index') }}">Volver a portada</a>
+  </div>
+
+  </main>
+
+  <script src="{{ url_for('static', filename='js/evaluaciones.js') }}"></script>
+</body>
+</html>

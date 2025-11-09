@@ -442,7 +442,38 @@ def create_app():
         # Solo renderiza la plantilla HTML, los datos se traen por fetch desde /stats
         return render_template("estadisticas.html")
 
+    @app.route("/evaluaciones")
+    def evaluaciones():
+        return render_template("evaluaciones.html")
+    
+    @app.route("/api/avisos")
+    def api_avisos():
+        session = getSession()
+        ultimos_avisos = (
+            session.query(AvisoAdopcion)
+            .order_by(AvisoAdopcion.fecha_ingreso.desc())
+            .limit(20)
+            .all()
+        )
 
+        avisos_json = []
+        for aviso in ultimos_avisos:
+            unidadEdad_final = formatear_unidad_edad(aviso.unidad_medida, aviso.edad)
+            plural_tipo = aviso.tipo.capitalize() + ("s" if aviso.cantidad > 1 else "")
+
+            avisos_json.append({
+                "id": aviso.id,
+                "fecha_publicacion": aviso.fecha_ingreso.strftime("%d/%m/%Y %H:%M"),
+                "sector": escape(aviso.sector or "No se especificó"),
+                "comuna": escape(aviso.comuna.nombre) if aviso.comuna else "No especificada",
+                "cantidad": aviso.cantidad,
+                "tipo": plural_tipo,
+                "edad": aviso.edad,
+                "unidadEdad": unidadEdad_final
+            })
+
+        session.close()
+        return jsonify(avisos_json)
 
     return app
 

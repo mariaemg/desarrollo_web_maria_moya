@@ -1,0 +1,60 @@
+/* Contenido principal */
+.main {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 2px 8px rgba(0,0,0,0.2);
+}
+
+.main h1 {
+  color: #4e025e;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.tabla-adopciones tbody tr:hover {
+  background-color: #e8d3f7;
+  transform: scale(1.02);
+  transition: all 0.2s ease;
+  cursor: pointer; /* para indicar que se puede seleccionar cada fila, diferente a la tabla del index */
+}
+
+/* Paginación */
+.paginacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #4e025e; /* morado oscuro */
+}
+
+.paginacion a {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #7a0ca3, #e91e63);
+  color: white;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.paginacion a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.paginacion span.active {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background-color: #54016d;
+  color: white;
+  font-weight: bold;
+}
+
+

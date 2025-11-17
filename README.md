@@ -20,6 +20,8 @@ Durante la carga de los datos, se muestra un mensaje de “Cargando...” hasta 
     - images: Placeholder para la ausencia de imágenes en algunos html.
     - js: Archivos JavaScript correspondientes al formulario, a informacion-adopcion.html y a evaluaciones.html, donde se realizan las peticiones al backend de Spring Boot.”
     - uploads: Imágenes subidas por medio del formulario.
+- **tarea4spring_copy/**: Carpeta que contiene un proyecto Spring Boot completamente independiente, el cual     implementa una versión autocontenida del backend y la interfaz de evaluación, tal como se solicitaba en la tarea.
+Este proyecto puede ejecutarse por separado y no depende del frontend Flask.
 
 El formulario es validado tanto en el **frontend**, por medio del JS, como en el **backend**, por medio de Flask.
 
@@ -42,5 +44,6 @@ Para la lógica de las **evaluaciones**, se realizan peticiones asíncronas al b
 - Se utilizó **fetch** para manejar las respuestas asociadas a obtener datos para las estadísticas y comentarios, para así procesar de manera asíncrona las solicitudes. Esto mejora la experiencia del usuario, ya que los comentarios se muestran automáticamente al agregarlos y las estadísticas se actualizan sin interrumpir la interacción con la página. Además, permite procesar múltiples solicitudes de datos de manera eficiente y fluida.
 - Se integró la comunicación con un backend de Spring Boot, utilizando fetch desde Flask para mostrar los avisos de adopción paginados (5 por página), enviar notas de evaluación y renderizar dinámicamente los resultados sin recargar la página.
 - Se añadió un indicador visual de carga (“Cargando...”) mientras se obtienen los datos desde el backend al cargar evaluaciones.html, mejorando la usabilidad del sistema. También se añade un indicador de carga mientras se añade la nueva nota ingresada por el usuario.
--Cuando se evalúa un aviso, el sistema actualiza únicamente el promedio de evaluación correspondiente, sin recargar toda la tabla, optimizando así el rendimiento y la experiencia del usuario.
+- Cuando se evalúa un aviso, el sistema actualiza únicamente el promedio de evaluación correspondiente, sin recargar toda la tabla, optimizando así el rendimiento y la experiencia del usuario.
+- Además del backend integrado mediante fetch desde Flask, se añadió en la misma carpeta un proyecto Spring Boot completamente independiente, cuyo objetivo es ofrecer una versión autocontenida de la aplicación, que solo ocupa Spring Boot y muestra la interfaz para evaluar, tal como se pedía en la tarea. Este proyecto separado permite levantar por sí solo la interfaz de evaluación de avisos sin depender de Flask. Sin embargo, para lograr un mejor ensamble con la solución original basada en Flask, se conservaron ambas alternativas: la integración Flask ⇄ Spring Boot y el backend Spring Boot standalone, dejando así disponible tanto la versión integrada como la versión completamente independiente del backend.
 - El proyecto fue subido a **Git**, y se trabajó en la rama `Tarea4` para el desarrollo.  

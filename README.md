@@ -1,9 +1,9 @@
-# Tarea 4 - Desarrollo Web
+# Tarea 5 - Desarrollo Web
 
 ## Descripción
-En esta cuarta parte del proyecto, se integró la aplicación con un backend adicional desarrollado en Spring Boot, el cual expone los avisos de adopción y permite evaluarlos.
-Desde Flask se realizan solicitudes asíncronas (fetch) a este servicio para mostrar y evaluar los avisos directamente desde la interfaz.
-Durante la carga de los datos, se muestra un mensaje de “Cargando...” hasta que el fetch finaliza, mejorando la experiencia del usuario.
+Con base en la implementación realizada en la Tarea 4, esta entrega incorpora dos nuevas
+funcionalidades utilizando **Spring Boot** y **Spring Security**, enfocadas en la administración
+de fotos asociadas a avisos de adopción.
 
 ## Estructura del proyecto
 - **app.py**: Archivo principal con la aplicación de Flask y definición de rutas. 
@@ -20,7 +20,7 @@ Durante la carga de los datos, se muestra un mensaje de “Cargando...” hasta 
     - images: Placeholder para la ausencia de imágenes en algunos html.
     - js: Archivos JavaScript correspondientes al formulario, a informacion-adopcion.html y a evaluaciones.html, donde se realizan las peticiones al backend de Spring Boot.”
     - uploads: Imágenes subidas por medio del formulario.
-- **tarea4spring_copy/**: Carpeta que contiene un proyecto Spring Boot completamente independiente, el cual     implementa una versión autocontenida del backend y la interfaz de evaluación, tal como se solicitaba en la tarea.
+- **tarea4spring_copy/**: Carpeta que contiene un proyecto Spring Boot completamente independiente, el cual implementa una versión autocontenida del backend y la interfaz de evaluación, tal como se solicitaba en la tarea. Ahora, implementa también una vista que despliega una galería para las fotos asociadas a los avisos de adopción y otra vista para poder ver mensajes de log (mensajes asociados a las fotos eliminadas), la cual está solo disponible para el usuario administrador.
 Este proyecto puede ejecutarse por separado y no depende del frontend Flask.
 
 El formulario es validado tanto en el **frontend**, por medio del JS, como en el **backend**, por medio de Flask.
@@ -30,6 +30,20 @@ También, se dejó la lógica de **validación del formulario** en un js aparte 
 Toda la lógica correspondiente a la **información de adopción** de un aviso particular también se dejó en un js aparte.
 
 Para la lógica de las **evaluaciones**, se realizan peticiones asíncronas al backend de Spring Boot para obtener los datos que rellenan la tabla de avisos de adopción y para registrar nuevas notas de evaluación asociadas a cada aviso.
+
+## 🔐 Seguridad con Spring Security
+
+Se integró **Spring Security** para proteger funcionalidades críticas.
+
+### Rutas protegidas:
+- `/t5-admin-fotos`
+- `/mensajes-log`
+
+### Acceso restringido:
+Solo disponible para el usuario administrador:
+
+- Usuario: `cc5002`
+- Contraseña: `examen`
 
 ## Decisiones tomadas
 - Se utilizó **Flexbox** para organizar los elementos en varias secciones, como las fotos de las tablas para que no fallaran con el padding o sobrepasaran el borde de estas.  
@@ -46,4 +60,4 @@ Para la lógica de las **evaluaciones**, se realizan peticiones asíncronas al b
 - Se añadió un indicador visual de carga (“Cargando...”) mientras se obtienen los datos desde el backend al cargar evaluaciones.html, mejorando la usabilidad del sistema. También se añade un indicador de carga mientras se añade la nueva nota ingresada por el usuario.
 - Cuando se evalúa un aviso, el sistema actualiza únicamente el promedio de evaluación correspondiente, sin recargar toda la tabla, optimizando así el rendimiento y la experiencia del usuario.
 - Además del backend integrado mediante fetch desde Flask, se añadió en la misma carpeta un proyecto Spring Boot completamente independiente, cuyo objetivo es ofrecer una versión autocontenida de la aplicación, que solo ocupa Spring Boot y muestra la interfaz para evaluar, tal como se pedía en la tarea. Este proyecto separado permite levantar por sí solo la interfaz de evaluación de avisos sin depender de Flask. Sin embargo, para lograr un mejor ensamble con la solución original basada en Flask, se conservaron ambas alternativas: la integración Flask ⇄ Spring Boot y el backend Spring Boot standalone, dejando así disponible tanto la versión integrada como la versión completamente independiente del backend, que es la solicitada por la tarea.
-- El proyecto fue subido a **Git**, y se trabajó en la rama `Tarea4` para el desarrollo.  
+- El proyecto fue subido a **Git**, y se trabajó en la rama `Tarea5` para el desarrollo.  

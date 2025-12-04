@@ -35,8 +35,7 @@ Para la lógica de las **evaluaciones**, se realizan peticiones asíncronas al b
 
 Se integró **Spring Security** para proteger funcionalidades críticas.
 
-### Rutas protegidas:
-- `/t5-admin-fotos`
+### Ruta protegida:
 - `/mensajes-log`
 
 ### Acceso restringido:

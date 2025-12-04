@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mensajes de Log</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+</head>
+<body>
+<div class="header">
+    <h1>Mensajes de Log</h1>
+</div>
+
+<div class="main">
+    <div class="tabla-wrapper">
+        <table class="tabla-adopciones">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Mensaje</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="log : ${logs}">
+                <td th:text="${log.id}"></td>
+                <td th:text="${#temporals.format(log.fecha, 'dd/MM/yyyy HH:mm:ss')}"></td>
+                <td th:text="${log.mensaje}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

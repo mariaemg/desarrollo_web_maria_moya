@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Administrador de Fotos</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+</head>
+<body>
+<div class="header">
+    <h1>Administrador de Fotos</h1>
+</div>
+
+<div class="main">
+    <div class="tabla-wrapper">
+        <table class="tabla-adopciones">
+            <thead>
+            <tr>
+                <th>Foto</th>
+                <th>Fecha Ingreso</th>
+                <th>Comuna</th>
+                <th>Email Contacto</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="foto : ${fotos}">
+                <td class="fotos-celda"><img th:src="@{${foto.url}}" alt="Foto"/></td>
+                <td th:text="${foto.aviso != null} ? ${#temporals.format(foto.aviso.fecha_ingreso, 'dd/MM/yyyy')} : '-'"></td>
+                <td th:text="${foto.aviso != null} ? ${foto.aviso.comuna} : '-'"></td>
+                <td th:text="${foto.aviso != null} ? ${foto.aviso.email} : '-'"></td>
+                <td>
+                    <form th:action="@{/t5-admin-fotos/eliminar/{id}(id=${foto.id})}" method="post" onsubmit="return pedirMotivo(this)">
+                        <input type="hidden" name="motivo"/>
+                        <button type="submit" class="btn-eliminar">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function pedirMotivo(form) {
+        let motivo = prompt('Ingrese el motivo de eliminación (5-200 caracteres):');
+        if (!motivo || motivo.length < 5 || motivo.length > 200) {
+            alert('Motivo inválido.');
+            return false;
+        }
+        form.motivo.value = motivo;
+        return true;
+    }
+</script>
+</body>
+</html>

@@ -18,6 +18,7 @@ public class Aviso {
     private String tipo;
     private Integer edad;
     private String unidad_medida;
+    private String email;
     
     // Relación muchos a uno con Comuna
     @ManyToOne
@@ -62,6 +63,14 @@ public class Aviso {
         double suma = 0;
         for (Nota n : notas) suma += n.getNota();
         return suma / notas.size();
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override

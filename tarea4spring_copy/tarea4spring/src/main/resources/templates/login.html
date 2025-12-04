@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+
+<body>
+<div class="login-container">
+
+    <h2>Iniciar Sesión</h2>
+    <p class="subtitle">Acceso solo para administradores</p>
+
+    <th:block th:if="${param.error != null}">
+        <div class="error">Usuario o contraseña incorrectos.</div>
+    </th:block>
+
+    <form method="post"
+          action="/login"
+          onsubmit="return validarFormulario()">
+
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+
+        <label for="username">Usuario</label>
+        <input id="username" type="text" name="username">
+
+        <div id="errorUser" class="error" style="display:none">
+            Debes ingresar un usuario.
+        </div>
+
+        <label for="password">Contraseña</label>
+        <input id="password" type="password" name="password">
+
+        <div id="errorPass" class="error" style="display:none">
+            Debes ingresar una contraseña.
+        </div>
+
+        <button type="submit" class="btn">Ingresar</button>
+    </form>
+
+</div>
+
+<script>
+function validarFormulario() {
+    const user = document.getElementById("username");
+    const pass = document.getElementById("password");
+
+    const eu = document.getElementById("errorUser");
+    const ep = document.getElementById("errorPass");
+
+    let ok = true;
+
+    if (user.value.trim() === "") {
+        eu.style.display = "block";
+        ok = false;
+    } else {
+        eu.style.display = "none";
+    }
+
+    if (pass.value.trim() === "") {
+        ep.style.display = "block";
+        ok = false;
+    } else {
+        ep.style.display = "none";
+    }
+
+    return ok;
+}
+</script>
+
+</body>
+</html>

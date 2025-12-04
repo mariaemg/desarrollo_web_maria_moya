@@ -20,7 +20,7 @@ de fotos asociadas a avisos de adopción.
     - images: Placeholder para la ausencia de imágenes en algunos html.
     - js: Archivos JavaScript correspondientes al formulario, a informacion-adopcion.html y a evaluaciones.html, donde se realizan las peticiones al backend de Spring Boot.”
     - uploads: Imágenes subidas por medio del formulario.
-- **tarea4spring_copy/**: Carpeta que contiene un proyecto Spring Boot completamente independiente, el cual implementa una versión autocontenida del backend y la interfaz de evaluación, tal como se solicitaba en la tarea. Ahora, implementa también una vista que despliega una galería para las fotos asociadas a los avisos de adopción y otra vista para poder ver mensajes de log (mensajes asociados a las fotos eliminadas), la cual está solo disponible para el usuario administrador.
+- **tarea4spring_copy/**: Carpeta que contiene un proyecto Spring Boot completamente independiente, el cual implementa una versión autocontenida del backend y la interfaz de evaluación, tal como se solicitaba en la tarea. Ahora, implementa también una vista que despliega una galería para las fotos asociadas a los avisos de adopción y otra vista para poder ver mensajes de log (mensajes asociados a las fotos eliminadas), las cuales están solo disponibles para el usuario administrador.
 Este proyecto puede ejecutarse por separado y no depende del frontend Flask.
 
 El formulario es validado tanto en el **frontend**, por medio del JS, como en el **backend**, por medio de Flask.
